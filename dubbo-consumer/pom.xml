@@ -19,9 +19,16 @@
 	</properties>
 
 	<dependencies>
+		<!--API接口的引入-->
 		<dependency>
 			<groupId>com.ts</groupId>
 			<artifactId>dubboApi</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<!--模型实体的引入-->
+		<dependency>
+			<groupId>com.ts</groupId>
+			<artifactId>model</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>

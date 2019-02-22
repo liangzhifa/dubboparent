@@ -9,6 +9,7 @@
         <module name="consumer" />
         <module name="dubbo-provider" />
         <module name="dubboApi" />
+        <module name="model" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -17,6 +18,7 @@
       <module name="dubbo-provider" target="1.8" />
       <module name="dubboApi" target="1.7" />
       <module name="dubboparent" target="1.6" />
+      <module name="model" target="1.6" />
     </bytecodeTargetLevel>
   </component>
 </project>

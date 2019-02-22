@@ -30,7 +30,7 @@
 			<artifactId>dubbo-spring-boot-starter</artifactId>
 			<version>0.1.0</version>
 		</dependency>
-
+<!---->
 		<!--引入zookeeper的客户端工具-->
 		<!-- https://mvnrepository.com/artifact/com.github.sgroschupf/zkclient -->
 		<dependency>
@@ -77,9 +77,18 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!--接口Api的引入-->
 		<dependency>
 			<groupId>com.ts</groupId>
 			<artifactId>dubboApi</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<!--模型实体的引入-->
+		<dependency>
+			<groupId>com.ts</groupId>
+			<artifactId>model</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

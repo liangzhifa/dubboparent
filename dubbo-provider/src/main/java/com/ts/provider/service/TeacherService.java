@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component
 @Service
-public class TeacherService implements ITeacherService {
+public class TeacherService implements ITeacherService  {
 
     @Autowired
     private TeacherMapper teacherMapper;

@@ -5,7 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/dubbo-consumer/consumer.iml" filepath="$PROJECT_DIR$/dubbo-consumer/consumer.iml" />
       <module fileurl="file://$PROJECT_DIR$/dubbo-provider/dubbo-provider.iml" filepath="$PROJECT_DIR$/dubbo-provider/dubbo-provider.iml" />
       <module fileurl="file://$PROJECT_DIR$/dubboApi/dubboApi.iml" filepath="$PROJECT_DIR$/dubboApi/dubboApi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dubboWeb/dubboWeb.iml" filepath="$PROJECT_DIR$/dubboWeb/dubboWeb.iml" />
       <module fileurl="file://$PROJECT_DIR$/dubboparent.iml" filepath="$PROJECT_DIR$/dubboparent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/model/model.iml" filepath="$PROJECT_DIR$/model/model.iml" />
     </modules>
   </component>
 </project>
