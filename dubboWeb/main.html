@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>个人信息管理</title>
+    <style>
+        body{margin: 10px;}
+        .demo-carousel{height: 200px; line-height: 200px; text-align: center;}
+    </style>
+    <link rel="stylesheet" href="./layui/lib/layui/css/layui.css" media="all">
+    <script src="./jquery-easyui-1.3.3/jquery.min.js"></script>
+    <script src="./layui/lib/layui/layui.all.js"></script>
+
+
+</head>
+<body>
+
+<blockquote class="layui-elem-quote">个人信息管理:个人信息的CRUD功能，可选择显示列，导出、打印个人信息</blockquote>
+<div class="demoTable">
+    参保年份：
+    <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+        <input type="text" class="layui-input" id="dateSearch">
+    </div>
+</div>
+<table class="layui-hide" id="test" lay-filter="test"></table>
+<div id="add-main" style="display: none;">
+    <form class="layui-form" id="add-form"  action="">
+        <div class="layui-form-item center" >
+            <div class="layui-input-block">
+            </div>
+        </div>
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" >社保卡号</label>
+            <div class="layui-input-block">
+                <input type="text" style="width: 320px;" name="socialSecurityCards" required placeholder="请输入社保卡号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" >金融卡号</label>
+            <div class="layui-input-block">
+                <input type="text" style="width: 320px;" name="fiscard" required  placeholder="请输入金融卡号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" >参保年份</label>
+            <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+                <input type="text" class="layui-input" name="insuredYear" id="insuredYear" required>
+            </div>
+        </div>
+        <div class="layui-form-item center" >
+            <label class="layui-form-label" >参保金额</label>
+            <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+                <input type="text" name="price" required placeholder="￥" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">保险类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="securityType" value="农村医疗" title="农村医疗" checked>
+                <input type="radio" name="securityType" value="职工医疗" title="职工医疗" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加参保信息</button>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+   <!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>-->
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+   <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+</script>
+
+
+
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    var insertVar;
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#dateSearch' //指定元素
+            ,type: 'year'
+            ,done: function(value, date, endDate){
+                console.log(value); //得到日期生成的值，如：2017-08-18
+                // todo 重新刷表单
+                var tableSearch = layui.table;
+                //执行重载
+                tableSearch.reload('test', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        insured_year: value
+                    }
+                });
+            }
+        });
+        laydate.render({
+            elem:'#insuredYear'
+            ,type: 'year'
+        });
+    });
+
+    layui.use('table', function(){
+        var table = layui.table;
+
+        table.render({
+            elem: '#test'
+            ,url:'http://192.168.1.88:8081/consumer/ts/findInfoByYear'
+            ,toolbar: '#toolbarDemo'
+            ,title: '用户数据表'
+            ,cols: [[
+                 {field:'id', title:'ID', width:80, fixed: 'left', unresize: true , align: 'center'}
+                ,{field:'identification', title:'身份证', width:200 , align: 'center' }
+                ,{field:'socialSecurityCards', title:'社保卡', width:200  , align: 'center' }
+                ,{field:'fiscard', title:'金融卡', width:200  , align: 'center' }
+                ,{field:'insuredYear', title:'入保年份', width:100 , align: 'center'}
+                ,{field:'price', title:'参保金额', width:100 , align: 'center'}
+                ,{field:'securityType', title:'保险类型', width:100 , align: 'center'}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:100 , align: 'center'}
+            ]]
+            ,page: true
+        });
+
+        //监听头工具栏事件
+        table.on('toolbar(test)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id)
+                ,data = checkStatus.data; //获取选中的数据
+            switch(obj.event){
+                case 'add':
+                    layer.msg('添加233');
+                    //页面层-自定义
+                     insertVar=layer.open({
+                        type: 1,
+                        title:"填写参保信息",
+                       // closeBtn: true,
+                        shift: 2,
+                        area: ['600px', '500px'],
+                        shadeClose: true,
+                        //btn: ['新增', '取消'],
+                        // btnAlign: 'c',
+                        content: $("#add-main"),
+                        yes: function(index, layero){
+                            //do something
+
+                            return false;
+                            layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            $("#add-main").css("display","none");
+                        }
+                        ,btn2: function(index, layero){
+                            //按钮【按钮二】的回调
+                            layer.close(index); //如果设定了yes回调，需进行手工关闭
+                            $("#add-main").css("display","none");
+                            //return false 开启该代码可禁止点击该按钮关闭
+                        }
+                        ,cancel: function(index, layero){
+                           /* if(confirm('确定要关闭么')){ //只有当点击confirm框的确定时，该层才会关闭
+                                layer.close(index);
+                                $("#add-main").css("display","none");
+                            }*/
+                            layer.close(index);
+                            $("#add-main").css("display","none");
+                            return false;
+                        }
+                    });
+                    break;
+            };
+        });
+
+        //监听行工具事件
+        table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                ,layEvent = obj.event; //获得 lay-event 对应的值
+            //console.log(data.id);
+            if(layEvent === 'detail'){
+                layer.msg('查看操作: '+JSON.stringify(data));
+            } else if(layEvent === 'del'){
+                //  <span class="layui-badge layui-bg-blue">蓝</span>
+                layer.confirm('真的删除工号:<span class="layui-badge layui-bg-blue">'+data.id+'</span> ,名字:<span class="layui-badge layui-bg-blue">'+data.teacherName+'</span> 的老师吗?', function(index){
+                    //向服务端发送删除指令
+                    $.ajax({
+                        url:"http://192.168.1.88:8081/consumer/teacher/deleteById",
+                        type:"post",
+                        data:{id:data.id},
+                        success:function(result){
+                            if(result.status){
+                                obj.del(); //删除对应行（tr）的DOM结构
+                                layer.close(index);
+                            }else {
+                                layer.msg( result.msg);
+                            }
+                        },
+                        error:function(e){
+                            layer.msg('错误！！');
+                        }
+                    });
+                });
+            } else if(layEvent === 'edit'){
+                layer.msg('编辑操作');
+            }
+        });
+
+    });
+
+    layui.use('form', function(){
+        var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+        //……
+        //但是，如果你的HTML是动态生成的，自动渲染就会失效
+        //因此你需要在相应的地方，执行下述方法来手动渲染，跟这类似的还有 element.init();
+        form.render();
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+
+            console.log(JSON.stringify(data.field));
+            var pattern = /^([1-9]{1})(\d{19})$/;
+            var socialSecurityCards=data.field.socialSecurityCards;
+            var fiscard=data.field.fiscard;
+            if(!pattern.test(socialSecurityCards)){
+                layer.msg("社保卡格式不对，请检查");
+                return false;
+            }
+            if(!pattern.test(fiscard)){
+                layer.msg("金融卡格式不对，请检查");
+                return false;
+            }
+            /*提交表单*/
+
+
+            $.ajax({
+                url:'http://192.168.1.88:8081/consumer/ts/insertInfo',
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    console.log(res);
+                    if(res.code==0){
+                        layer.msg(res.msg);
+                        layer.close(insertVar); //如果设定了yes回调，需进行手工关闭
+                        $("#add-main").css("display","none");
+                        //刷新表单
+                        layui.table.reload('test', {
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        });
+                    }
+                    else{
+                        console.log(res.msg);
+                        layer.msg(res.msg);
+                    }
+                },
+                error:function(data){
+                    layer.msg("服务器错误");
+                }
+            });
+            return false;//如果不加这句，则ajax的回调函数不执行
+        });
+    });
+
+</script>
+
+</body>
+<script>
+
+    function keyup_submit(e){
+        var evt = window.event || e;
+        if (evt.keyCode == 13){
+            //回车事件
+            $("#search").click();
+        }
+    }
+</script>
+</html>

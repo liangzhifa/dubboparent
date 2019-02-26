@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>注册页</title>
+    <style>
+        body{margin: 10px;}
+        .demo-carousel{height: 200px; line-height: 200px; text-align: center;}
+    </style>
+    <link rel="stylesheet" href="./layui/lib/layui/css/layui.css" media="all">
+
+</head>
+<body>
+<div class="layui-card">
+    <blockquote class="layui-elem-quote">
+       注册面板
+    </blockquote>
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓 名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="username" required  lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">*必填项</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">身份证</label>
+                <div class="layui-input-inline">
+                <input type="text" name="identification" lay-verify="identity" placeholder="请输入身份证" autocomplete="off" class="layui-input">
+            </div>
+                <div class="layui-form-mid layui-word-aux">*必填项，认真填写身份证号码</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">性 别</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="sex" value="1" title="男" checked>
+                    <input type="radio" name="sex" value="0" title="女" >
+                </div>
+                <div class="layui-form-mid layui-word-aux">*必填项</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密 码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">*必填项，必须是6-20位的字母及数字混合</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">确认密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="verifyPassword" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">*必填项，必须是6-20位的字母及数字混合</div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</body>
+<script src="./jquery-easyui-1.3.3/jquery.min.js"></script>
+<script src="./layui/lib/layui/layui.all.js"></script>
+<script>
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+
+            console.log(JSON.stringify(data.field));
+            console.log("password:"+JSON.stringify(data.field.password)+"  verifyPassword:"+JSON.stringify(data.field.verifyPassword));
+           // window.location="./login.html";
+            if (data.field.password!=data.field.verifyPassword){
+                layer.msg("密码前后不一致，请重试！");
+                return false;
+            }
+
+            /*至少有一个数字字母的正则表达式：*/
+           //var rex=/^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,20}$/;
+            var regx =/^(?!([a-zA-Z]+|\d+)$)[a-zA-Z\d]{6,20}$/;
+            var str=data.field.password;
+            if (!regx.test(str)){
+                layer.msg("6-20位的字母及数字混合,至少有1个数字和一个字母");
+                return false;
+            }
+          //  alert("最后return");
+            /*提交表单*/
+            $.ajax({
+                url:'http://192.168.1.88:8081/consumer/ts/userRegister',
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    console.log(res);
+                    if(res.code==0){
+
+                        layer.msg(res.data.msg);
+                        //跳转到登录
+                        window.location=res.data.url;
+                    }
+                    else{
+                        console.log(res.data.msg);
+                        layer.msg(res.data.msg);
+                    }
+                },
+                error:function(data){
+                    layer.msg("服务器错误");
+                }
+            });
+            return false;//如果不加这句，则ajax的回调函数不执行
+
+        });
+
+    });
+</script>
+</html>

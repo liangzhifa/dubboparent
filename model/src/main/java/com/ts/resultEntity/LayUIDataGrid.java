@@ -2,6 +2,7 @@ package com.ts.resultEntity;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LayUIDataGrid implements Serializable {
@@ -31,7 +32,16 @@ public class LayUIDataGrid implements Serializable {
 
         return new LayUIDataGrid(count,data);
     }
+    public static LayUIDataGrid ReturnERRODataGrid(){
 
+        LayUIDataGrid layUIDataGrid = new LayUIDataGrid();
+
+        layUIDataGrid.setCode(1);
+        layUIDataGrid.setCount(0l);
+        layUIDataGrid.setMsg("请求失败，或者没登录");
+        layUIDataGrid.setData(new ArrayList());
+        return layUIDataGrid;
+    }
     public int getCode() {
         return code;
     }

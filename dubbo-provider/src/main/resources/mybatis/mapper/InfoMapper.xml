@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ts.provider.mapper.InfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ts.model.Info" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="identification" property="identification" jdbcType="VARCHAR" />
+    <result column="social_security_cards" property="socialSecurityCards" jdbcType="VARCHAR" />
+    <result column="fiscard" property="fiscard" jdbcType="VARCHAR" />
+    <result column="insured_year" property="insuredYear" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="security_type" property="securityType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, identification, social_security_cards, fiscard, insured_year, price, security_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="findInfoByYear" resultType="com.ts.model.Info">
+        select
+        <include refid="Base_Column_List" />
+        from info
+        <where>
+            identification=#{identification}
+            <if test="insured_year!=null and insured_year!=''">
+              and insured_year = #{insured_year}
+            </if>
+        </where>
+       <!-- <if test="insured_year!=null and insured_year!=''">
+            WHERE insured_year = #{insured_year}
+        </if>-->
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ts.model.Info" >
+    insert into info (id, identification, social_security_cards, 
+      fiscard, insured_year, price, 
+      security_type)
+    values (#{id,jdbcType=INTEGER}, #{identification,jdbcType=VARCHAR}, #{socialSecurityCards,jdbcType=VARCHAR}, 
+      #{fiscard,jdbcType=VARCHAR}, #{insuredYear,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{securityType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ts.model.Info" >
+    insert into info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="identification != null" >
+        identification,
+      </if>
+      <if test="socialSecurityCards != null" >
+        social_security_cards,
+      </if>
+      <if test="fiscard != null" >
+        fiscard,
+      </if>
+      <if test="insuredYear != null" >
+        insured_year,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="securityType != null" >
+        security_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="identification != null" >
+        #{identification,jdbcType=VARCHAR},
+      </if>
+      <if test="socialSecurityCards != null" >
+        #{socialSecurityCards,jdbcType=VARCHAR},
+      </if>
+      <if test="fiscard != null" >
+        #{fiscard,jdbcType=VARCHAR},
+      </if>
+      <if test="insuredYear != null" >
+        #{insuredYear,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="securityType != null" >
+        #{securityType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ts.model.Info" >
+    update info
+    <set >
+      <if test="identification != null" >
+        identification = #{identification,jdbcType=VARCHAR},
+      </if>
+      <if test="socialSecurityCards != null" >
+        social_security_cards = #{socialSecurityCards,jdbcType=VARCHAR},
+      </if>
+      <if test="fiscard != null" >
+        fiscard = #{fiscard,jdbcType=VARCHAR},
+      </if>
+      <if test="insuredYear != null" >
+        insured_year = #{insuredYear,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="securityType != null" >
+        security_type = #{securityType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ts.model.Info" >
+    update info
+    set identification = #{identification,jdbcType=VARCHAR},
+      social_security_cards = #{socialSecurityCards,jdbcType=VARCHAR},
+      fiscard = #{fiscard,jdbcType=VARCHAR},
+      insured_year = #{insuredYear,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      security_type = #{securityType,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
+
